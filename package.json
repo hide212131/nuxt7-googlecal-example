@@ -1,0 +1,26 @@
+{
+  "name": "shiftpad",
+  "version": "1.0.0",
+  "description": "My PWA App",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "framework7": "^2.0.6",
+    "framework7-vue": "^2.0.0",
+    "nuxt": "next",
+    "nuxt7": "latest",
+    "vue-full-calendar": "^2.5.1",
+    "vue-google-signin-button": "^1.0.2"
+  },
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "8080"
+    }
+  }
+}

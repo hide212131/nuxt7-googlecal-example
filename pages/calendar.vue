@@ -54,6 +54,9 @@ export default {
   },
 
   methods: {
+    refreshEvents() {
+      this.$refs.calendar.$emit('refetch-events')
+    },
     dayClick(date, jsEvent, view) {
       console.log(
         "dayClick: date, events, selected, unselected",

@@ -51,9 +51,9 @@ module.exports = {
   },
 
   build: {
-    vendor: ['vue-google-signin-button']
+    vendor: ['vue-google-signin-button', 'store']
   },
-  plugins: ['~/plugins/googlesignin.js']
+  plugins: ['~/plugins/googlesignin.js', '~/plugins/store.js']
   ,
   router: {
     middleware: 'check-auth'

@@ -13,6 +13,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import localStorage from 'store'
 
 export default {
   computed: mapGetters([
@@ -21,16 +22,12 @@ export default {
   ]),
   methods: {
     onSignOut() {
+      localStorage.set("login", null)
       let auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function() {
         console.log("User signed out.");
       });
       this.$store.commit("SET_USER", null);
-      this.$f7router.navigate("/login/", {
-        reloadCurrent: true,
-        reloadAll: true,
-        ignoreCache: true
-      });
     },
   }
 };

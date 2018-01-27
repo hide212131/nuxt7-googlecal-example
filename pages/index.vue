@@ -33,17 +33,29 @@
       <f7-link icon-f7="gear" text="設定" tab-link="#tab_settings"></f7-link>
     </f7-toolbar>
 
+    <login @success="onSignInSuccess"></login>
   </f7-page>
 
 </template>
 
 <script>
+import login from "~/pages/login.vue";
 import calendar from "~/pages/calendar.vue";
 import { mapGetters } from "vuex";
+import { googleInitClientFromLocalStorage } from "~/utils/google-api";
 
 export default {
+  async mounted() {
+    try {
+      await googleInitClientFromLocalStorage(this.$store);
+    } catch (err) {
+      this.$store.commit("ERROR", ["googleInitClientFromLocalStorage failed", err]);
+      this.$f7router.navigate("/error/");
+    }
+  },
   components: {
-    calendar
+    calendar,
+    login
   },
   data() {
     return {
@@ -54,6 +66,9 @@ export default {
     ...mapGetters(["isAuthenticated", "loggedUser"])
   },
   methods: {
+    onSignInSuccess() {
+      this.$refs.cal.refreshEvents()
+    },
     onCalendarChanged() {
       this.calendarEditing = this.$refs.cal.isEditing;
     },
@@ -82,8 +97,8 @@ export default {
             console.log(e);
             if (e.error == undefined) {
               // selected -> base
-              event.id = e.id
-              self.$refs.cal.commitInsert(event)
+              event.id = e.id;
+              self.$refs.cal.commitInsert(event);
             } else {
               self.$refs.cal.selected.push(event);
               if (error == null) {
@@ -105,7 +120,7 @@ export default {
           request.execute(function(e) {
             if (e.error == undefined) {
               // unselected -> base
-              self.$refs.cal.commitDelete(event)
+              self.$refs.cal.commitDelete(event);
             } else {
               self.$refs.cal.unselected.push(event);
               if (error == null) {

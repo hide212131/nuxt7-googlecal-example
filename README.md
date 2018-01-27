@@ -20,3 +20,11 @@ $ yarn run generate
 ```
 
 For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
+
+# Attention
+fix this
+ "export 'Framework7Vue' was not found in 'framework7-vue'
+.nuxt/f7-plugin.js
+import Vue from 'vue'
+import Framework7Vue from 'framework7-vue'
+

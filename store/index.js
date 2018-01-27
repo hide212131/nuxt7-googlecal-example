@@ -3,7 +3,7 @@ import Env from '~/env.js'
 export const state = () => ({
   user: null,
   eventTitle: Env.event.DEFAULT_TITLE,
-  error: {}
+  error: null
 })
 
 export const mutations = {
@@ -12,6 +12,8 @@ export const mutations = {
   },
   ERROR(state, error) {
     state.error = { errorMessage: error[0], error: error[1] }
+    console.log("ERROR", state.error)
+    console.trace()
   }
 }
 
@@ -21,5 +23,8 @@ export const getters = {
   },
   loggedUser(state) {
     return state.user
+  },
+  isError(state) {
+    return !!state.error    
   }
 }

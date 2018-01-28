@@ -7,18 +7,7 @@
 import { FullCalendar } from "vue-full-calendar";
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
-
-function contains(evts, date) {
-  return evts.find(e => isSame(e.start, date)) != null;
-}
-
-function getByDate(evts, date) {
-  return evts.find(e => isSame(e.start, date));
-}
-
-function isSame(d1, d2) {
-  return d1.diff(d2, "days") == 0;
-}
+import { contains, getByDate, isSame } from "~/utils/date";;
 
 export default {
   components: {

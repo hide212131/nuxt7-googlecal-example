@@ -43,13 +43,17 @@ import login from "~/pages/login.vue";
 import calendar from "~/pages/calendar.vue";
 import { mapGetters } from "vuex";
 import { googleInitClientFromLocalStorage } from "~/utils/google-api";
+import { contains, getByDate, isSame } from "~/utils/date";
 
 export default {
   async mounted() {
     try {
       await googleInitClientFromLocalStorage(this.$store);
     } catch (err) {
-      this.$store.commit("ERROR", ["googleInitClientFromLocalStorage failed", err]);
+      this.$store.commit("ERROR", [
+        "googleInitClientFromLocalStorage failed",
+        err
+      ]);
       this.$f7router.navigate("/error/");
     }
   },
@@ -67,15 +71,18 @@ export default {
   },
   methods: {
     onSignInSuccess() {
-      this.$refs.cal.refreshEvents()
+      this.$refs.cal.refreshEvents();
     },
     onCalendarChanged() {
       this.calendarEditing = this.$refs.cal.isEditing;
     },
     submitCalendarEvent() {
+      this.openPreloader()
       const self = this;
       let error = null;
       if (gapi.client != null) {
+        let batch = gapi.client.newBatch();
+
         let tryInsert = [].concat(this.$refs.cal.selected);
         this.$refs.cal.selected = [];
         tryInsert.forEach((event, index) => {
@@ -93,43 +100,40 @@ export default {
             calendarId: "primary",
             resource: newEvent
           });
-          request.execute(function(e) {
-            console.log(e);
-            if (e.error == undefined) {
-              // selected -> base
-              event.id = e.id;
-              self.$refs.cal.commitInsert(event);
-            } else {
-              self.$refs.cal.selected.push(event);
-              if (error == null) {
-                error = e;
-                self.error("google calendar insert failed.", e);
-              }
-            }
-          });
+          batch.add(request);
         });
 
         let tryDelete = [].concat(this.$refs.cal.unselected);
-        console.log("★", tryDelete);
         this.$refs.cal.unselected = [];
         tryDelete.forEach((event, index) => {
           const request = gapi.client.calendar.events.delete({
             calendarId: "primary",
             eventId: event.id
           });
-          request.execute(function(e) {
-            if (e.error == undefined) {
-              // unselected -> base
-              self.$refs.cal.commitDelete(event);
-            } else {
-              self.$refs.cal.unselected.push(event);
-              if (error == null) {
-                error = e;
-                self.error("google calendar delete failed.", e);
-              }
+          batch.add(request);          
+        })
+
+        batch.execute((responseMap, rawBatchResponse) => {
+          try {
+            tryInsert.forEach((event, index) => {
+              let item = Object.values(responseMap).filter(item => item.result != undefined)
+              .find(item => isSame(event.start, item.result.start.date));
+              if ((item != null) & (item.result.status == "confirmed")) {
+                event.id = item.result.id;
+                self.$refs.cal.commitInsert(event);
+              }              
+            })
+            tryDelete.forEach((event, index) => {
+                self.$refs.cal.commitDelete(event);              
+            })
+          } catch(err) {
+            if (error == null) {
+              error = err;
+              self.error("google calendar failed.", error);
             }
-          });
-        });
+          }
+          this.closePreloader()
+        })
       } else {
         this.error("gapi.client is null", null);
       }
@@ -141,6 +145,14 @@ export default {
       console.log("ERROR", msg, err);
       this.$store.commit("ERROR", [msg, err]);
       this.$f7router.navigate("/error/");
+    },
+    openPreloader() {
+      const app = this.$f7;
+      app.dialog.preloader();
+    },
+    closePreloader() {
+      const app = this.$f7;
+      app.dialog.close();
     }
   }
 };

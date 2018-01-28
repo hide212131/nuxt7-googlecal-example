@@ -4,7 +4,7 @@
       <f7-login-screen-title>Shift Pad</f7-login-screen-title>
       <f7-list>
         <f7-list-item>
-          <g-signin-button align="center"
+          <g-signin-button align="center" ref="gSigninButton"
             :params="googleSignInParams"
             @success="onSignInSuccess"
             @error="onSignInError">
@@ -27,6 +27,12 @@ export default {
       googleSignInParams
     };
   },
+  mounted() {
+    let self = this
+    this.$refs.gSigninButton.$refs.signinBtn.onclick = () => {
+      self.openPreloader();
+    };
+  },
   computed: {
     ...mapGetters(["isAuthenticated", "loggedUser"])
   },
@@ -43,7 +49,6 @@ export default {
   methods: {
     async onSignInSuccess(googleUser) {
       try {
-        this.openPreloader();
         await googleInitClientNew(googleUser, this.$store);
         this.$emit("success");
         this.closePreloader();

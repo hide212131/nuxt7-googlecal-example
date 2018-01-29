@@ -7,7 +7,8 @@
 import { FullCalendar } from "vue-full-calendar";
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
-import { contains, getByDate, isSame } from "~/utils/date";;
+import { contains, getByDate, isSame } from "~/utils/date";
+import * as api from "~/utils/google-api";
 
 export default {
   components: {
@@ -44,7 +45,7 @@ export default {
 
   methods: {
     refreshEvents() {
-      this.$refs.calendar.$emit('refetch-events')
+      this.$refs.calendar.$emit("refetch-events");
     },
     dayClick(date, jsEvent, view) {
       console.log(
@@ -146,52 +147,34 @@ export default {
       const self = this;
       return [
         {
-          events(start, end, timezone, callback) {
+          async events(start, end, timezone, callback) {
             console.log(
               "events->callback",
               start.toISOString(),
               end.toISOString()
             );
 
-            if (gapi.client != null) {
-              gapi.client.calendar.events
-                .list({
-                  calendarId: "primary",
-                  timeMin: start.toDate().toISOString(),
-                  timeMax: end.toDate().toISOString(),
-                  showDeleted: false,
-                  singleEvents: true,
-                  orderBy: "startTime"
-                })
-                .then(
-                  function(response) {
-                    // get event sources
-                    console.log("response", response);
-                    let events = response.result.items
-                      .filter(
-                        item => item.summary == self.$store.state.eventTitle
-                      )
-                      .map(item => {
-                        let when = item.start.dateTime;
-                        if (!when) {
-                          when = item.start.date;
-                        }
-                        return self.newEvent(when, item.id);
-                      });
-
-                    self.base = events;
-                    console.log("self.base", self.base);
-                  },
-                  function(e) {
-                    console.log("Error: gapi.client.calendar.events.list" + e);
-                    self.$store.commit(
-                      "ERROR",
-                      ["gapi.client.calendar.events.list",
-                      e]
-                    );
-                    self.$f7router.navigate("/error/");
-                  }
-                );
+            if (api.isAvailable()) {
+              try {
+                const response = await api.list(start, end);
+                // get event sources
+                console.log("response", response);
+                let events = response.result.items
+                  .filter(item => item.summary == self.$store.state.eventTitle)
+                  .map(item => {
+                    let when = item.start.dateTime;
+                    if (!when) {
+                      when = item.start.date;
+                    }
+                    return self.newEvent(when, item.id);
+                  });
+                self.base = events;
+                console.log("self.base", self.base);
+              } catch (e) {
+                console.log("Error: api.list" + e);
+                self.$store.commit("ERROR", ["api.list", e]);
+                self.$f7router.navigate("/error/");
+              }
             }
             callback([]);
           }

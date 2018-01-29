@@ -24,7 +24,7 @@ export const googleSignInParams = {
     apiKey: API_KEY
 }
 
-export const googleInitClientFromLocalStorage = async (store) => {
+export const initClientFromLocalStorage = async (store) => {
     // let googleUser = localStorage.get("login")
     // console.log("googleInitClientFromLocalStorage googleUser=", googleUser)
     // if (googleUser != null) {
@@ -42,6 +42,48 @@ export const googleInitClientNew = async (googleUser, store) => {
     localStorage.set("login", googleUser)
     await googleInitClient(googleUser, store)
 }
+
+export const newBatch = () => {
+    return gapi.client.newBatch();
+}
+
+export const isAvailable = () => {
+    return gapi.client != null
+}
+
+export const insertRequest = (resource) => {
+    return gapi.client.calendar.events.insert({
+        calendarId: "primary",
+        resource
+    })
+}
+
+export const deleteRequest = (eventId) => {
+    return gapi.client.calendar.events.delete({
+        calendarId: "primary",
+        eventId
+    })
+}
+
+export const execute = (batch) => {
+    return new Promise((resolve, reject) => {
+        batch.execute((responseMap, rawBatchResponse) => {
+            resolve(responseMap)
+        })
+    })
+}
+
+export const list = (start, end) => {
+    return gapi_await(gapi.client.calendar.events.list, {
+        calendarId: "primary",
+        timeMin: start.toDate().toISOString(),
+        timeMax: end.toDate().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        orderBy: "startTime"
+    })
+}
+
 
 const googleInitAuth = async () => {
     console.log("googleInitAuth")
@@ -94,6 +136,6 @@ const gapi_load = async (module) => {
 
 const gapi_await = async (api, module) => {
     return new Promise((resolve, reject) => {
-        api.call(this, module).then(() => { resolve() }, (err) => { reject(err) })
+        api.call(this, module).then((res) => { resolve(res) }, (err) => { reject(err) })
     })
 }

@@ -42,16 +42,16 @@
 import login from "~/pages/login.vue";
 import calendar from "~/pages/calendar.vue";
 import { mapGetters } from "vuex";
-import { googleInitClientFromLocalStorage } from "~/utils/google-api";
+import * as api from "~/utils/google-api";
 import { contains, getByDate, isSame } from "~/utils/date";
 
 export default {
   async mounted() {
     try {
-      await googleInitClientFromLocalStorage(this.$store);
+      await api.initClientFromLocalStorage(this.$store);
     } catch (err) {
       this.$store.commit("ERROR", [
-        "googleInitClientFromLocalStorage failed",
+        "initClientFromLocalStorage failed",
         err
       ]);
       this.$f7router.navigate("/error/");
@@ -76,12 +76,12 @@ export default {
     onCalendarChanged() {
       this.calendarEditing = this.$refs.cal.isEditing;
     },
-    submitCalendarEvent() {
-      this.openPreloader()
+    async submitCalendarEvent() {
       const self = this;
       let error = null;
-      if (gapi.client != null) {
-        let batch = gapi.client.newBatch();
+      if (api.isAvailable()) {
+        this.openPreloader();
+        let batch = api.newBatch();
 
         let tryInsert = [].concat(this.$refs.cal.selected);
         this.$refs.cal.selected = [];
@@ -95,47 +95,41 @@ export default {
               date: event.start.toISOString()
             }
           };
-          //console.log("newEvent", newEvent)
-          const request = gapi.client.calendar.events.insert({
-            calendarId: "primary",
-            resource: newEvent
-          });
+          const request = api.insertRequest(newEvent);
           batch.add(request);
         });
 
         let tryDelete = [].concat(this.$refs.cal.unselected);
         this.$refs.cal.unselected = [];
         tryDelete.forEach((event, index) => {
-          const request = gapi.client.calendar.events.delete({
-            calendarId: "primary",
-            eventId: event.id
-          });
-          batch.add(request);          
-        })
+          const request = api.deleteRequest(event.id);
+          batch.add(request);
+        });
 
-        batch.execute((responseMap, rawBatchResponse) => {
-          try {
-            tryInsert.forEach((event, index) => {
-              let item = Object.values(responseMap).filter(item => item.result != undefined)
+        try {
+          const responseMap = await api.execute(batch); 
+          tryInsert.forEach((event, index) => {
+            let item = Object.values(responseMap)
+              .filter(item => item.result != undefined)
               .find(item => isSame(event.start, item.result.start.date));
-              if ((item != null) & (item.result.status == "confirmed")) {
-                event.id = item.result.id;
-                self.$refs.cal.commitInsert(event);
-              }              
-            })
-            tryDelete.forEach((event, index) => {
-                self.$refs.cal.commitDelete(event);              
-            })
-          } catch(err) {
-            if (error == null) {
-              error = err;
-              self.error("google calendar failed.", error);
+            if ((item != null) & (item.result.status == "confirmed")) {
+              event.id = item.result.id;
+              self.$refs.cal.commitInsert(event);
             }
+          });
+          tryDelete.forEach((event, index) => {
+            self.$refs.cal.commitDelete(event);
+          });
+        } catch (err) {
+          if (error == null) {
+            error = err;
+            self.error("api access failed.", error);
           }
-          this.closePreloader()
-        })
+        }
+        this.closePreloader();
+
       } else {
-        this.error("gapi.client is null", null);
+        this.error("api is not available.", null);
       }
     },
     cancelCalendarEvent() {

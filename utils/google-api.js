@@ -25,6 +25,8 @@ export const googleSignInParams = {
 }
 
 export const initClientFromLocalStorage = async (store) => {
+    // under construction...
+    // 
     // let googleUser = localStorage.get("login")
     // console.log("googleInitClientFromLocalStorage googleUser=", googleUser)
     // if (googleUser != null) {

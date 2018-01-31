@@ -1,0 +1,18 @@
+{
+    "links": {
+        "googlesignin": "Googleにログイン",
+        "calendar": "カレンダー",
+        "settings": "設定",
+        "submit": "登録　　　",
+        "cancel": "キャンセル"
+    },
+    "googlesignin": {
+        "title": "Googleカレンダー連携",
+        "account": "Googleアカウント",        
+        "signedin": "でログイン中。",
+        "signout": "ログアウト"      
+    },
+    "error": {
+        "desc": "エラーが発生しました。"
+    }
+}

@@ -1,11 +1,11 @@
 <template>
   <f7-page>
-    <f7-navbar title="Google Calendar 連携" back-link="Back"></f7-navbar>
-    <f7-block-title>Google アカウント </f7-block-title>
+    <f7-navbar back-link="Back">{{$t('googlesignin.title')}}</f7-navbar>
+    <f7-block-title>{{$t('googlesignin.account')}}</f7-block-title>
     <f7-block strong>
       <f7-label v-if="isAuthenticated">
-          {{ loggedUser.getBasicProfile().getName() }} でログイン中。
-          <f7-link v-on:click="onSignOut">Sign out</f7-link>
+          {{ loggedUser.getBasicProfile().getName() }} {{$t('googlesignin.signedin')}}
+          <f7-link v-on:click="onSignOut">{{$t('googlesignin.signout')}}</f7-link>
       </f7-label>
     </f7-block>
   </f7-page>

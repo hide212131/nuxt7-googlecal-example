@@ -3,18 +3,15 @@
 
     <f7-navbar>
       <f7-nav-left>
-        <f7-link v-if="calendarEditing" text="登録" v-on:click="submitCalendarEvent"></f7-link>
+        <f7-link v-if="calendarEditing" v-on:click="submitCalendarEvent">{{$t('links.submit')}}</f7-link>
       </f7-nav-left>
-      <f7-nav-title>Shift Pad</f7-nav-title>
+      <f7-nav-title>{{$t('title')}}</f7-nav-title>
       <f7-nav-right>
-        <f7-link v-if="calendarEditing" text="キャンセル" v-on:click="cancelCalendarEvent"></f7-link>
+        <f7-link v-if="calendarEditing" v-on:click="cancelCalendarEvent">{{$t('links.cancel')}}</f7-link>
       </f7-nav-right>
     </f7-navbar>
-    <!-- Side Panelが効かないので使わない -->
 
-    <!-- animatedの表示が変なので使わない -->
     <f7-tabs>
-      <!-- active属性が効かないので直接class指定 -->
       <f7-tab id="tab_cal" class="tab-active">
         <calendar ref="cal" v-on:changed="onCalendarChanged" ></calendar>
       </f7-tab>
@@ -22,15 +19,14 @@
       </f7-tab>
       <f7-tab id="tab_settings" >
           <f7-list class="components-list searchbar-found">
-            <f7-list-item link="/googlesignin/" title="Google Calendar連携"></f7-list-item>
+            <f7-list-item link="/googlesignin/">{{$t('googlesignin.title')}}</f7-list-item>
           </f7-list>
       </f7-tab>
     </f7-tabs>
 
     <f7-toolbar tabbar labels>
-      <f7-link icon-f7="calendar" text="カレンダー" tab-link="#tab_cal"></f7-link>
-      <!-- <f7-link icon-f7="keyboard" text="給与計算" tab-link="#tab_salary"></f7-link> -->
-      <f7-link icon-f7="gear" text="設定" tab-link="#tab_settings"></f7-link>
+      <f7-link icon-f7="calendar" tab-link="#tab_cal">{{$t('links.calendar')}}</f7-link>
+      <f7-link icon-f7="gear" tab-link="#tab_settings">{{$t('links.settings')}}</f7-link>
     </f7-toolbar>
 
     <login @success="onSignInSuccess"></login>

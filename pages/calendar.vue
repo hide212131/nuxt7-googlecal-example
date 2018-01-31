@@ -30,7 +30,7 @@ export default {
           center: "title",
           right: "next"
         },
-        // 指定しないと縦幅が短くなってしまう
+        // If it is not specified, the vertical width will be shortened
         height: "auto"
         // eventClick: event => {
         //   console.log("eventClick", event);

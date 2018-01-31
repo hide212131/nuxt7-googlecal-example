@@ -1,0 +1,20 @@
+{
+    "title": "EasyGoCal"
+    ,
+    "links": {
+        "googlesignin": "Sign in Google",
+        "calendar": "Calendar",
+        "settings": "Settings",
+        "submit": "Submit",
+        "cancel": "Cancel"
+    },
+    "googlesignin": {
+        "title": "Google Calendar",
+        "account": "Google Account",        
+        "signedin": "signed in.",
+        "signout": "Sign Out"      
+    },
+    "error": {
+        "desc": "Error is occured."
+    }
+}

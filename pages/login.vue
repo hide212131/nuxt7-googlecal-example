@@ -1,14 +1,14 @@
 <template>
   <f7-login-screen :opened="!isAuthenticated" >
     <f7-page login-screen>
-      <f7-login-screen-title>Shift Pad</f7-login-screen-title>
+      <f7-login-screen-title>{{$t('title')}}</f7-login-screen-title>
       <f7-list>
         <f7-list-item>
           <g-signin-button align="center" ref="gSigninButton"
             :params="googleSignInParams"
             @success="onSignInSuccess"
             @error="onSignInError">
-            Googleにサインイン
+            {{$t('links.googlesignin')}}
           </g-signin-button>
         </f7-list-item>
       </f7-list>

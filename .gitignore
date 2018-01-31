@@ -21,4 +21,6 @@ vscode
 # Service worker generated files
 sw.*
 workbox-*
+
 env.js
+*.log

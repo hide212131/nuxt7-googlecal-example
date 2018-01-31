@@ -7,8 +7,8 @@
 import { FullCalendar } from "vue-full-calendar";
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
-import { contains, getByDate, isSame } from "~/utils/date";
 import * as api from "~/utils/google-api";
+import * as eSet from "~/utils/events";
 
 export default {
   components: {
@@ -55,20 +55,20 @@ export default {
         this.selected,
         this.unselected
       );
-      const baseExists = contains(this.base, date);
-      const eventSelected = contains(this.selected, date);
-      const eventUnselected = contains(this.unselected, date);
+      const baseExists = eSet.contains(this.base, date);
+      const eventSelected = eSet.contains(this.selected, date);
+      const eventUnselected = eSet.contains(this.unselected, date);
       if (baseExists) {
         if (eventUnselected) {
-          this.unselected = this.unselected.filter(e => !isSame(e.start, date));
+          this.unselected = eSet.remove(this.unselected, date);
         } else {
-          const event = this.base.find(e => isSame(e.start, date));
+          const event = eSet.getByDate(this.base, date);
           this.unselected.push(event);
         }
       } else {
         // event not exsits
         if (eventSelected) {
-          this.selected = this.selected.filter(e => !isSame(e.start, date));
+          this.selected = eSet.remove(this.selected, date);
         } else {
           this.selected.push(this.newEvent(date));
         }
@@ -95,10 +95,7 @@ export default {
       this.base.push(event);
     },
     commitDelete(event) {
-      this.base.splice(
-        this.base.findIndex(b => isSame(b.start, event.start)),
-        1
-      );
+      eSet.remove(this.base, event.start);
     }
   },
   watch: {
@@ -115,17 +112,15 @@ export default {
       // add selected  to events
       // remove dupulicate date and marge
       let addevts = this.selected.filter(
-        s => this.base.find(b => isSame(s.start, b.start)) == null
+        s => !eSet.contains(this.base, s.start)
       );
       let events = this.base.concat(addevts);
 
       // unselected filter
       events.forEach(e => {
-        if (this.selected.find(u => isSame(u.start, e.start)) != null) {
+        if (eSet.contains(this.selected, e.start)) {
           e.color = "red";
-        } else if (
-          this.unselected.find(u => isSame(u.start, e.start)) != null
-        ) {
+        } else if (eSet.contains(this.unselected, e.start)) {
           e.color = "gray";
         } else {
           e.color = "green";

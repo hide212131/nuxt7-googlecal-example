@@ -43,17 +43,14 @@ import login from "~/pages/login.vue";
 import calendar from "~/pages/calendar.vue";
 import { mapGetters } from "vuex";
 import * as api from "~/utils/google-api";
-import { contains, getByDate, isSame } from "~/utils/date";
+import * as eSet from "~/utils/events";
 
 export default {
   async mounted() {
     try {
       await api.initClientFromLocalStorage(this.$store);
     } catch (err) {
-      this.$store.commit("ERROR", [
-        "initClientFromLocalStorage failed",
-        err
-      ]);
+      this.$store.commit("ERROR", ["initClientFromLocalStorage failed", err]);
       this.$f7router.navigate("/error/");
     }
   },
@@ -107,11 +104,11 @@ export default {
         });
 
         try {
-          const responseMap = await api.execute(batch); 
+          const responseMap = await api.execute(batch);
           tryInsert.forEach((event, index) => {
             let item = Object.values(responseMap)
               .filter(item => item.result != undefined)
-              .find(item => isSame(event.start, item.result.start.date));
+              .find(item => eSet.sameDate(event.start, item.result.start.date));
             if ((item != null) & (item.result.status == "confirmed")) {
               event.id = item.result.id;
               self.$refs.cal.commitInsert(event);
@@ -127,7 +124,6 @@ export default {
           }
         }
         this.closePreloader();
-
       } else {
         this.error("api is not available.", null);
       }
@@ -141,12 +137,10 @@ export default {
       this.$f7router.navigate("/error/");
     },
     openPreloader() {
-      const app = this.$f7;
-      app.dialog.preloader();
+      this.$f7.dialog.preloader();
     },
     closePreloader() {
-      const app = this.$f7;
-      app.dialog.close();
+      this.$f7.dialog.close();
     }
   }
 };

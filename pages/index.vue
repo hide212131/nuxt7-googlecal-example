@@ -128,7 +128,6 @@ export default {
       this.$refs.cal.cancelEditing();
     },
     error(msg, err) {
-      console.log("ERROR", msg, err);
       this.$store.commit("ERROR", [msg, err]);
       this.$f7router.navigate("/error/");
     },

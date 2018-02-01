@@ -32,10 +32,6 @@ export default {
         },
         // If it is not specified, the vertical width will be shortened
         height: "auto"
-        // eventClick: event => {
-        //   console.log("eventClick", event);
-        //   this.selected = event;
-        // }
       },
       base: [],
       selected: [],
@@ -48,13 +44,6 @@ export default {
       this.$refs.calendar.$emit("refetch-events");
     },
     dayClick(date, jsEvent, view) {
-      console.log(
-        "dayClick: date, events, selected, unselected",
-        date,
-        this.events,
-        this.selected,
-        this.unselected
-      );
       const baseExists = eSet.contains(this.base, date);
       const eventSelected = eSet.contains(this.selected, date);
       const eventUnselected = eSet.contains(this.unselected, date);
@@ -126,15 +115,6 @@ export default {
           e.color = "green";
         }
       });
-
-      console.log(
-        "(base, selected, unselected) => events",
-        this.base,
-        this.selected,
-        this.unselected,
-        events
-      );
-
       return events;
     },
 
@@ -143,17 +123,10 @@ export default {
       return [
         {
           async events(start, end, timezone, callback) {
-            console.log(
-              "events->callback",
-              start.toISOString(),
-              end.toISOString()
-            );
-
             if (api.isAvailable()) {
               try {
                 const response = await api.list(start, end);
                 // get event sources
-                console.log("response", response);
                 let events = response.result.items
                   .filter(item => item.summary == self.$store.state.eventTitle)
                   .map(item => {
@@ -164,9 +137,7 @@ export default {
                     return self.newEvent(when, item.id);
                   });
                 self.base = events;
-                console.log("self.base", self.base);
               } catch (e) {
-                console.log("Error: api.list" + e);
                 self.$store.commit("ERROR", ["api.list", e]);
                 self.$f7router.navigate("/error/");
               }

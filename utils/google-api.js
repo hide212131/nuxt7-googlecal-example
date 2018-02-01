@@ -25,19 +25,7 @@ export const googleSignInParams = {
 }
 
 export const initClientFromLocalStorage = async (store) => {
-    // under construction...
-    // 
-    // let googleUser = localStorage.get("login")
-    // console.log("googleInitClientFromLocalStorage googleUser=", googleUser)
-    // if (googleUser != null) {
-    //     //await googleInitAuth()
-    //     //console.log("gapi.auth2", gapi)
-    //     // gapi.auth2.setToken({
-    //     //     access_token: googleUser.getAuthResponse().id_token
-    //     // })
-    //     await googleInitClient(googleUser, store)
-    //     //gapi.client.setToken(googleUser.getAuthResponse().id_token)
-    // }
+    // under construction... How can I make it...
 }
 
 export const googleInitClientNew = async (googleUser, store) => {
@@ -88,27 +76,18 @@ export const list = (start, end) => {
 
 
 const googleInitAuth = async () => {
-    console.log("googleInitAuth")
-    console.log("googleInitAuth: gapi.load(auth2) start")
     await gapi_load('auth2')
-    console.log("googleInitAuth: gapi.load(auth2) success")
     gapi.auth2.init(googleSignInParams)
 }
 
 const googleInitClient = async (googleUser, store) => {
-    console.log("googleInitClient")
-
-    console.log("googleInitClient: gapi.load(client) start")
     await gapi_load('client')
-    console.log("googleInitClient: gapi.load(client) success")
-    console.log("googleInitClient: gapi.init(client) start")
     await gapi_await(gapi.client.init, {
         apiKey: API_KEY,
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES
     })
-    console.log("googleInitClient: gapi.init(client) success")
     store.commit("SET_USER", googleUser)
 }
 
@@ -116,20 +95,16 @@ const gapi_load = async (module) => {
     return new Promise((resolve, reject) => {
         gapi.load(module, {
             callback: function () {
-                console.log("gapi_load: success")
                 // Handle gapi.client initialization.
                 resolve();
-                //reject(new Error('TEST reject'));
             },
             onerror: function () {
                 // Handle loading error.
-                console.log("gapi_load: failure")
                 reject(new Error('gapi.client failed to load!'));
             },
             timeout: 5000, // 5 seconds.
             ontimeout: function () {
                 // Handle timeout.
-                console.log("gapi_load: timeout")
                 reject(new Error('gapi.client could not load in a timely manner!'));
             }
         })

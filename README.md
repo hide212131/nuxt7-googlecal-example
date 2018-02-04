@@ -2,6 +2,8 @@
 
 [Nuxt7](https://github.com/nuxt-community/nuxt7) Sample GoogleCalendar Application
 
+![demo](https://github.com/hide212131/nuxt7-googlecal-example/wiki/images/readme.gif)
+
 - iOS style look and feel web application.
 - Use Google Signin authentication.
 - Calendar data works with Google Calendar.
@@ -9,7 +11,7 @@
 
 ## Build Setup
 
-Before running, you need to go to [Google Cloud Platform](https://console.cloud.google.com/) >
+Before running, you need to go to [Google Cloud Platform](https://console.cloud.google.com/) >
 "APIs & Services" > "Credentials" and create the Client ID and API Key. See the below.
 https://developers.google.com/google-apps/calendar/quickstart/js
 

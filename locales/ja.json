@@ -14,6 +14,9 @@
         "signedin": "でログイン中。",
         "signout": "ログアウト"      
     },
+    "calendar": {
+        "titleFormat": "YYYY年MM月" 
+    },
     "error": {
         "desc": "エラーが発生しました。"
     }

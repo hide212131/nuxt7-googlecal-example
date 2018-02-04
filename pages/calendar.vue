@@ -15,16 +15,18 @@ export default {
     FullCalendar
   },
   data() {
+          console.log("lang", this)
+
     return {
       config: {
         views: {
           month: {
-            titleFormat: "YYYY年MM月"
+            titleFormat: this.$t('calendar.titleFormat')
           }
         },
         theme: false,
         defaultView: "month",
-        locale: "ja",
+        locale: this.$i18n.locale,
         header: {
           left: "prev",
           center: "title",

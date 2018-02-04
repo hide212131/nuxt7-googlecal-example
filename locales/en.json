@@ -14,6 +14,9 @@
         "signedin": "signed in.",
         "signout": "Sign Out"      
     },
+    "calendar": {
+        "titleFormat": "MMMM YYYY"
+    },
     "error": {
         "desc": "Error is occured."
     }

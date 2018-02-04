@@ -38,7 +38,8 @@ export const newBatch = () => {
 }
 
 export const isAvailable = () => {
-    return (gapi.client != undefined && gapi.client.calendar != undefined);
+    return (window.gapi != undefined && window.gapi.client != undefined
+        && window.gapi.client.calendar != undefined);
 }
 
 export const insertRequest = (resource) => {

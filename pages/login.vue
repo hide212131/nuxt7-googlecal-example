@@ -61,6 +61,7 @@ export default {
     onSignInError(error) {
       this.$store.commit("ERROR", ["Google SignIn failed", error]);
       this.$f7router.navigate("/error/");
+      this.$store.commit("SET_PROGRESS", false);
     }
   }
 };

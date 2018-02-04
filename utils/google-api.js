@@ -1,8 +1,7 @@
-import Env from '~/env.js'
 import localStorage from 'store'
 
-const CLIENT_ID = Env.google.CLIENT_ID
-const API_KEY = Env.google.API_KEY
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const API_KEY = process.env.GOOGLE_API_KEY
 // Array of API discovery doc URLs for APIs used by the quickstart
 const DISCOVERY_DOCS = [
     "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"

@@ -1,8 +1,7 @@
-import Env from '~/env.js'
 
 export const state = () => ({
   user: null,
-  eventTitle: Env.event.DEFAULT_TITLE,
+  eventTitle: process.env.EVENT_DEFAULT_TITLE,
   inProgress: false,
   error: null
 })

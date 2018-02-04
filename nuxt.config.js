@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 module.exports = {
   // Nuxt modules
   modules: [
@@ -51,7 +53,13 @@ module.exports = {
   },
 
   build: {
-    vendor: ['vue-google-signin-button', 'store', 'vue-i18n']
+    vendor: ['vue-google-signin-button', 'store', 'vue-i18n'],
+    extend (config, ctx) {
+      config.plugins.push(
+        new webpack.EnvironmentPlugin(['GOOGLE_API_KEY', 'GOOGLE_CLIENT_ID', 'EVENT_DEFAULT_TITLE'])
+      )
+    }
+
   },
   plugins: ['~/plugins/googlesignin.js', '~/plugins/store.js', '~/plugins/i18n.js']
 }

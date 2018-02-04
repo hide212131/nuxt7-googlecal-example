@@ -22,7 +22,6 @@ vscode
 sw.*
 workbox-*
 
-env.js
 *.log
 firebase.json
 .firebaserc

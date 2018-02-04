@@ -13,18 +13,12 @@ Before running, you need to go to [Google Cloud Platform](https://console.cloud
 "APIs & Services" > "Credentials" and create the Client ID and API Key. See the below.
 https://developers.google.com/google-apps/calendar/quickstart/js
 
-After, copy file "env.js.sample" to "env.js" and fix items.
+After, set environment variables.
 
-```js
-module.exports = {
-    google: {
-        CLIENT_ID: "....",
-        API_KEY: "....",
-    },
-    event: {
-        DEFAULT_TITLE: "MyEvent" // event title (registered as all-day-event).
-    }
-}
+```bash
+export GOOGLE_API_KEY=
+export GOOGLE_CLIENT_ID=
+export EVENT_DEFAULT_TITLE=  // event title (registered as all-day-event).
 ```
 
 Install dependencies

@@ -60,7 +60,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["isAuthenticated", "loggedUser"])
+    ...mapGetters(["isAuthenticated", "loggedUser", "inProgress"])
+  },
+  watch: {
+    inProgress: function(newValue, oldValue) {
+      if (oldValue == false && newValue == true) {
+        this.openPreloader();
+      } else {
+        this.closePreloader();
+      }
+    }
   },
   methods: {
     onSignInSuccess() {
@@ -73,7 +82,7 @@ export default {
       const self = this;
       let error = null;
       if (api.isAvailable()) {
-        this.openPreloader();
+        self.$store.commit("SET_PROGRESS", true);
         let batch = api.newBatch();
 
         let tryInsert = [].concat(this.$refs.cal.selected);
@@ -119,7 +128,7 @@ export default {
             self.error("api access failed.", error);
           }
         }
-        this.closePreloader();
+        self.$store.commit("SET_PROGRESS", false);
       } else {
         this.error("api is not available.", null);
       }

@@ -125,7 +125,9 @@ export default {
           async events(start, end, timezone, callback) {
             if (api.isAvailable()) {
               try {
+                self.$store.commit("SET_PROGRESS", true);
                 const response = await api.list(start, end);
+                self.$store.commit("SET_PROGRESS", false);
                 // get event sources
                 let events = response.result.items
                   .filter(item => item.summary == self.$store.state.eventTitle)

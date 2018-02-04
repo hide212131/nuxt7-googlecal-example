@@ -30,7 +30,7 @@ export default {
   mounted() {
     let self = this
     this.$refs.gSigninButton.$refs.signinBtn.onclick = () => {
-      self.openPreloader();
+      self.$store.commit("SET_PROGRESS", true);
     };
   },
   computed: {
@@ -51,24 +51,16 @@ export default {
       try {
         await googleInitClientNew(googleUser, this.$store);
         this.$emit("success");
-        this.closePreloader();
       } catch (err) {
         this.$store.commit("ERROR", ["gapi.client.init failed", err]);
         this.$f7router.navigate("/error/");
-        this.closePreloader();
+      } finally {
+        this.$store.commit("SET_PROGRESS", false);
       }
     },
     onSignInError(error) {
       this.$store.commit("ERROR", ["Google SignIn failed", error]);
       this.$f7router.navigate("/error/");
-    },
-    openPreloader() {
-      const app = this.$f7;
-      app.dialog.preloader();
-    },
-    closePreloader() {
-      const app = this.$f7;
-      app.dialog.close();
     }
   }
 };

@@ -46,7 +46,7 @@ module.exports = {
 
   head: {
     script: [
-      { src: 'https://apis.google.com/js/platform.js', async: true, defer: true}
+      { src: 'https://apis.google.com/js/api:client.js', async: true, defer: true}
     ]
   },
 

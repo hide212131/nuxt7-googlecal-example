@@ -38,7 +38,7 @@ export const newBatch = () => {
 }
 
 export const isAvailable = () => {
-    return gapi.client != null
+    return (gapi.client != undefined && gapi.client.calendar != undefined);
 }
 
 export const insertRequest = (resource) => {
@@ -74,14 +74,7 @@ export const list = (start, end) => {
     })
 }
 
-
-const googleInitAuth = async () => {
-    await gapi_load('auth2')
-    gapi.auth2.init(googleSignInParams)
-}
-
 const googleInitClient = async (googleUser, store) => {
-    await gapi_load('client')
     await gapi_await(gapi.client.init, {
         apiKey: API_KEY,
         clientId: CLIENT_ID,
@@ -89,26 +82,6 @@ const googleInitClient = async (googleUser, store) => {
         scope: SCOPES
     })
     store.commit("SET_USER", googleUser)
-}
-
-const gapi_load = async (module) => {
-    return new Promise((resolve, reject) => {
-        gapi.load(module, {
-            callback: function () {
-                // Handle gapi.client initialization.
-                resolve();
-            },
-            onerror: function () {
-                // Handle loading error.
-                reject(new Error('gapi.client failed to load!'));
-            },
-            timeout: 5000, // 5 seconds.
-            ontimeout: function () {
-                // Handle timeout.
-                reject(new Error('gapi.client could not load in a timely manner!'));
-            }
-        })
-    })
 }
 
 const gapi_await = async (api, module) => {

@@ -1,8 +1,7 @@
 # EasyGoCal
 
-[Nuxt7](https://github.com/nuxt-community/nuxt7) Sample Application
+[Nuxt7](https://github.com/nuxt-community/nuxt7) Sample GoogleCalendar Application
 
-This.is simple calendar app.
 - iOS style look and feel web application.
 - Use Google Signin authentication.
 - Calendar data works with Google Calendar.

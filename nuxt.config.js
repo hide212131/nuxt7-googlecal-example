@@ -7,8 +7,8 @@ module.exports = {
   // PWA manifest
   // https://github.com/nuxt-community/pwa-module
   manifest: {
-    name: 'ShiftPad',
-    description: 'My PWA App'
+    name: 'EasyGoCal',
+    description: 'Nuxt7 Sample App'
   },
 
   // Framework7 Config

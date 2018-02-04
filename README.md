@@ -1,6 +1,6 @@
-# ShiftPad
+# EasyGoCal
 
-> My PWA App
+> Nuxt7 Sample Application
 
 ## Build Setup
 

@@ -21,6 +21,9 @@
           <f7-list class="components-list searchbar-found">
             <f7-list-item link="/googlesignin/">{{$t('googlesignin.title')}}</f7-list-item>
           </f7-list>
+          <f7-list class="components-list searchbar-found">
+            <f7-list-item link="/eventsettings/">Event Settings</f7-list-item>
+          </f7-list>
       </f7-tab>
     </f7-tabs>
 

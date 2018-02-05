@@ -10,6 +10,9 @@ export const mutations = {
   SET_USER(state, user) {
     state.user = user || null
   },
+  SET_EVENT_TITLE(state, eventTitle) {
+    state.eventTitle = eventTitle || null
+  },
   SET_PROGRESS(state, inProgress) {
     state.inProgress = inProgress
   },
